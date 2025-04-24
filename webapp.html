@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Country of Origin of the Song</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .game-container {
+            text-align: center;
+            max-width: 600px;
+        }
+        .song-title {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+        .choices {
+            list-style-type: none;
+            padding: 0;
+        }
+        .choice {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        .choice:hover {
+            background-color: #45a049;
+        }
+        .feedback {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #4CAF50;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Guess the Country of Origin of the Song</h1>
+<div class="game-container">
+    <div id="song-title" class="song-title"></div>
+    <div id="feedback" class="feedback"></div>
+    <ul id="choices-container" class="choices"></ul>
+    <div id="score" class="score">Score: 0</div>
+    <button id="next-button" onclick="nextQuestion()" style="display:none;">Next Question</button>
+</div>
+
+<script>
+    let currentQuestion = 0;
+    let score = 0;
+
+    const songs = [
+        {
+            title: "Despacito",
+            country: "Puerto Rico",
+            choices: ["Mexico", "Colombia", "Puerto Rico", "Spain"]
+        },
+        {
+            title: "Gangnam Style",
+            country: "South Korea",
+            choices: ["South Korea", "Japan", "China", "Thailand"]
+        },
+        {
+            title: "Shape of You",
+            country: "United Kingdom",
+            choices: ["United States", "Canada", "United Kingdom", "Australia"]
+        },
+        {
+            title: "La Bamba",
+            country: "Mexico",
+            choices: ["Spain", "Mexico", "Colombia", "Argentina"]
+        },
+        {
+            title: "Waka Waka (This Time for Africa)",
+            country: "Colombia",
+            choices: ["South Africa", "Colombia", "Kenya", "Nigeria"]
+        }
+    ];
+
+    function displayQuestion() {
+        const question = songs[currentQuestion];
+        const songTitle = document.getElementById("song-title");
+        const choicesContainer = document.getElementById("choices-container");
+        const feedback = document.getElementById("feedback");
+
+        // Display the song title
+        songTitle.textContent = `Where is the song "${question.title}" from?`;
+
+        // Clear previous feedback
+        feedback.textContent = "";
+
+        // Display choices
+        choicesContainer.innerHTML = '';
+        question.choices.forEach(choice => {
+            const choiceButton = document.createElement("button");
+            choiceButton.classList.add("choice");
+            choiceButton.textContent = choice;
+            choiceButton.onclick = function () { checkAnswer(choice); };
+            choicesContainer.appendChild(choiceButton);
+        });
+    }
+
+    function checkAnswer(selected) {
+        const question = songs[currentQuestion];
+        const feedback = document.getElementById("feedback");
+
+        if (selected === question.country) {
+            score++;
+            feedback.textContent = `Correct! "${question.title}" is from ${question.country}.`;
+        } else {
+            feedback.textContent = `Incorrect! The correct answer is ${question.country}.`;
+        }
+
+        document.getElementById("score").textContent = `Score: ${score}`;
+        document.getElementById("next-button").style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < songs.length) {
+            displayQuestion();
+            document.getElementById("next-button").style.display = "none";
+        } else {
+            document.getElementById("song-title").style.display = "none";
+            document.getElementById("choices-container").innerHTML = '';
+            document.getElementById("feedback").textContent = `Congratulations! You've completed the game. Your final score is: ${score}`;
+            document.getElementById("next-button").style.display = "none";
+        }
+    }
+
+    // Start the game
+    displayQuestion();
+</script>
+
+</body>
+</html>
